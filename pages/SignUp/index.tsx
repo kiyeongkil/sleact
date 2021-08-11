@@ -1,16 +1,47 @@
 import React, { useCallback, useState } from 'react';
-import { Header, Form, Label, Input, Button, LinkContainer } from '@pages/SignUp/styles';
+import { Header, Form, Label, Input, Button, LinkContainer, Error } from '@pages/SignUp/styles';
 
 const SignUp = () => {
-  const [email] = useState('');
-  const [nickname] = useState('');
-  const [password] = useState('');
-  const [passwordCheck] = useState('');
-  const onSubmit = useCallback(() => {}, []);
-  const onChangeEmail = useCallback(() => {}, []);
-  const onChangeNickname = useCallback(() => {}, []);
-  const onChangePassword = useCallback(() => {}, []);
-  const onChangePasswordCheck = useCallback(() => {}, []);
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [mismatchError, setMismatchError] = useState(false);
+
+  const onChangeEmail = useCallback((e) => {
+    setEmail(e.target.value);
+  }, []);
+
+  const onChangeNickname = useCallback((e) => {
+    setNickname(e.target.value);
+  }, []);
+
+  const onChangePassword = useCallback(
+    (e) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value !== passwordCheck);
+    },
+    [passwordCheck],
+  );
+
+  const onChangePasswordCheck = useCallback(
+    (e) => {
+      setPasswordCheck(e.target.value);
+      setMismatchError(e.target.value !== password);
+    },
+    [password],
+  );
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.prevent.default();
+      console.log(email, nickname, password, passwordCheck);
+      if (!mismatchError) {
+        console.log('회원가입 이상 없음');
+      }
+    },
+    [email, nickname, password, passwordCheck, mismatchError],
+  );
 
   return (
     <div id="container">
@@ -45,6 +76,7 @@ const SignUp = () => {
               onChange={onChangePasswordCheck}
             />
           </div>
+          {mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}
         </Label>
         <Button type="submit">회원가입</Button>
       </Form>
