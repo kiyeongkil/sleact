@@ -30,7 +30,7 @@ const SignUp = () => {
 
   const onSubmit = useCallback(
     (e) => {
-      e.prevent.default();
+      e.preventDefault();
       console.log(email, nickname, password, passwordCheck);
       if (!mismatchError) {
         console.log('회원가입 이상 없음');

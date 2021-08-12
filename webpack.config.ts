@@ -80,7 +80,7 @@ const config: Configuration = {
     port: 3090,
     publicPath: '/dist',
     proxy: { //로컬로 띄울때 임시
-      '/api': {
+      '/api/': {
         target: 'http://localhost:3095',
         changeOrigin: true,
       }
