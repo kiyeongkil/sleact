@@ -8,12 +8,12 @@ interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const isDevelopment = process.env.NODE_ENV !== 'development';
 
 const config: Configuration = {
   name: 'sleact',
   mode: isDevelopment ? 'development' : 'production',
-  devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
+  devtool: !isDevelopment ? 'hidden-source-map' : 'inline-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
@@ -79,6 +79,12 @@ const config: Configuration = {
     historyApiFallback: true,
     port: 3090,
     publicPath: '/dist',
+    proxy: { //로컬로 띄울때 임시
+      '/api': {
+        target: 'http://localhost:3095',
+        changeOrigin: true,
+      }
+    }
   },
 };
 
