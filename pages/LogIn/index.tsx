@@ -2,7 +2,7 @@ import useInput from '@hooks/useInput';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
 import { Header, Form, Label, Input, Button, LinkContainer, Error, Success } from '@pages/SignUp/styles';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 
@@ -28,6 +28,14 @@ const LogIn = () => {
     },
     [email, password],
   );
+
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
+
+  if (data) {
+    return <Redirect to="/workspace/channel" />;
+  }
 
   return (
     <div id="container">
