@@ -23,12 +23,19 @@ import gravatar from 'gravatar';
 import loadable from '@loadable/component';
 import Menu from '@components/Menu';
 import { IUser } from '@typings/db';
+import { Button, Input, Label } from '@pages/SignUp/styles';
+import useInput from '@hooks/useInput';
+import Modal from '@components/Modal';
 
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 
 const Workspace: FC = ({ children }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
+  const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
+  const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+
   const { data: userData, error, revalidate, mutate } = useSWR<IUser | false>('/api/users', fetcher, {
     dedupingInterval: 2000,
   });
@@ -47,7 +54,20 @@ const Workspace: FC = ({ children }) => {
     setShowUserMenu((prev) => !prev);
   }, []);
 
-  const onClickCreateWorkspace = useCallback(() => {}, []);
+  const onCloseUserProfile = useCallback((e) => {
+    e.stopPropagation();
+    setShowUserMenu((prev) => !prev);
+  }, []);
+
+  const onClickCreateWorkspace = useCallback(() => {
+    setShowCreateWorkspaceModal(true);
+  }, []);
+
+  const onCreateWorkspace = useCallback(() => {}, []);
+
+  const onCloseModal = useCallback(() => {
+    setShowCreateWorkspaceModal(false);
+  }, []);
 
   if (!userData) {
     return <Redirect to="/login" />;
@@ -60,7 +80,7 @@ const Workspace: FC = ({ children }) => {
           <span onClick={onClickUserProfile}>
             <ProfileImg src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
             {showUserMenu && (
-              <Menu style={{right: 0, top: 38}} show={showUserMenu} onCloseModal={onClickUserProfile}>
+              <Menu style={{right: 0, top: 38}} show={showUserMenu} onCloseModal={onCloseUserProfile}>
                 <ProfileModal>
                   <ProfileImg src={gravatar.url(userData.email, { s: '36px', d: 'retro' })} alt={userData.nickname} />
                   <div>
@@ -96,7 +116,19 @@ const Workspace: FC = ({ children }) => {
           </Switch>
         </Chats>
       </WorkspaceWrapper>
-      {children}
+      <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
+        <form onSubmit={onCreateWorkspace}>
+          <Label id="workspace-label">
+            <span>워크스페이스 명</span>
+            <Input id="workspace" value={newWorkspace} onChange={onChangeNewWorkspace} />
+          </Label>
+          <Label id="workspace-url-label">
+            <span>워크스페이스 url</span>
+            <Input id="workspace" value={newUrl} onChange={onChangeNewUrl} />
+          </Label>
+          <Button type="submit">생성하기</Button>
+        </form>
+      </Modal>
     </div>
   );
 };
