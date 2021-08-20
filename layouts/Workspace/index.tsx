@@ -26,6 +26,7 @@ import { IUser } from '@typings/db';
 import { Button, Input, Label } from '@pages/SignUp/styles';
 import useInput from '@hooks/useInput';
 import Modal from '@components/Modal';
+import { toast } from 'react-toastify';
 
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
@@ -63,7 +64,28 @@ const Workspace: FC = ({ children }) => {
     setShowCreateWorkspaceModal(true);
   }, []);
 
-  const onCreateWorkspace = useCallback(() => {}, []);
+  const onCreateWorkspace = useCallback((e) => {
+    e.preventDefault();
+    if (!newWorkspace || !newWorkspace.trim()) return;
+    if (!newUrl || !newUrl.trim()) return;
+    axios.post('/api/worksapces', {
+      workspace: newWorkspace,
+      url: newUrl,
+    }, {
+      withCredentials: true,
+    })
+      .then(() => {
+        revalidate();
+        setShowCreateWorkspaceModal(false);
+        setNewWorkspace('');
+        setNewUrl('');
+      })
+      .catch((error) => {
+        toast.error(error.response?.data, { position: 'bottom-center' });
+      });
+  }, 
+    [newWorkspace, newUrl]
+  );
 
   const onCloseModal = useCallback(() => {
     setShowCreateWorkspaceModal(false);
