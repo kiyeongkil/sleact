@@ -3,11 +3,9 @@ import { Container, Header } from '@pages/Channel/styles';
 
 const Channel = () => {
   return (
-      <Container>
-        <Header>
-          Channel!
-        </Header>
-      </Container>
+    <Container>
+      <Header>Channel!</Header>
+    </Container>
   );
 };
 
