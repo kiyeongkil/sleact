@@ -12,14 +12,14 @@ import { toast } from 'react-toastify';
 interface Props {
   show: boolean;
   onCloseModal: () => void;
-  setShowInviteWorkspaceModal: (flag: boolean) => void;
+  setShowInviteChannelModal: (flag: boolean) => void;
 }
-const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWorkspaceModal }) => {
-  const { workspace } = useParams<{ workspace: string; channel: string }>();
+const InviteChannelModal: FC<Props> = ({ show, onCloseModal, setShowInviteChannelModal }) => {
+  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
   const [newMember, onChangeMember, setNewMember] = useInput('');
   const { data: userData } = useSWR<IUser>('/api/users', fetcher);
-  const { revalidate: revalidateChannel } = useSWR<IChannel[]>(
-    userData ? `/api/workspaces/${workspace}/members` : null,
+  const { revalidate: revalidateMembers } = useSWR<IChannel[]>(
+    userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
   );
 
@@ -30,10 +30,10 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
         return;
       }
       axios
-        .post(`/api/workspaces/${workspace}/members`, { email: newMember })
+        .post(`/api/workspaces/${workspace}/channels/${channel}/members`, { email: newMember })
         .then(() => {
-          revalidateChannel();
-          setShowInviteWorkspaceModal(false);
+          revalidateMembers();
+          setShowInviteChannelModal(false);
           setNewMember('');
         })
         .catch((error) => {
@@ -48,7 +48,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
     <Modal show={show} onCloseModal={onCloseModal}>
       <form onSubmit={onInviteMember}>
         <Label id="member-label">
-          <span>이메일</span>
+          <span>채널 멤버 초대</span>
           <Input id="member" type="email" value={newMember} onChange={onChangeMember} />
         </Label>
         <Button type="submit">초대하기</Button>
@@ -57,4 +57,4 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
   );
 };
 
-export default InviteWorkspaceModal;
+export default InviteChannelModal;
