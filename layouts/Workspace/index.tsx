@@ -86,7 +86,7 @@ const Workspace: VFC = () => {
       if (!newUrl || !newUrl.trim()) return;
       axios
         .post(
-          '/api/worksapces',
+          '/api/workspaces',
           {
             workspace: newWorkspace,
             url: newUrl,
@@ -168,6 +168,7 @@ const Workspace: VFC = () => {
           <MenuScroll>
             <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{ top: 95, left: 80 }}>
               <WorkspaceModal>
+                <h2>sleact</h2>
                 <button onClick={onClickInviteWorkspace}>사용자 초대</button>
                 <button onClick={onClickAddChannel}>채널 만들기</button>
                 <button onClick={onLogout}>로그아웃</button>

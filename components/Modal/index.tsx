@@ -18,6 +18,7 @@ const Modal: FC<Props> = ({ show, children, onCloseModal }) => {
     <CreateModal onClick={onCloseModal}>
       <div onClick={stopPropagation}>
         <CloseModalButton onClick={onCloseModal}>&times;</CloseModalButton>
+        {children}
       </div>
     </CreateModal>
   );
