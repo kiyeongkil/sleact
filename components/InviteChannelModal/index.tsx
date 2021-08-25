@@ -3,7 +3,7 @@ import useInput from '@hooks/useInput';
 import { Button, Input, Label } from '@pages/SignUp/styles';
 import React, { FC, useCallback } from 'react';
 import { useParams } from 'react-router';
-import { IChannel, IUser } from '@typings/db';
+import { IUser } from '@typings/db';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
@@ -18,8 +18,8 @@ const InviteChannelModal: FC<Props> = ({ show, onCloseModal, setShowInviteChanne
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
   const [newMember, onChangeMember, setNewMember] = useInput('');
   const { data: userData } = useSWR<IUser>('/api/users', fetcher);
-  const { revalidate: revalidateMembers } = useSWR<IChannel[]>(
-    userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
+  const { revalidate: revalidateMembers } = useSWR<IUser[]>(
+    userData && channel ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
   );
 
