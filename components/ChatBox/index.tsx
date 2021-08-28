@@ -25,7 +25,7 @@ const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder }) 
   } = useSWR<IUser | false>('/api/users', fetcher, {
     dedupingInterval: 2000,
   });
-  const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspace/${workspace}/members` : null, fetcher);
+  const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
