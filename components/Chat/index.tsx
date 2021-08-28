@@ -3,12 +3,33 @@ import React, { VFC } from 'react';
 import { ChatWrapper } from './styles';
 import gravatar from 'gravatar';
 import dayjs from 'dayjs';
+import regexifyString from 'regexify-string';
+import { Link, useParams } from 'react-router-dom';
 
 interface Props {
   data: IDM;
 }
 const Chat: VFC<Props> = ({ data }) => {
+  const { workspace } = useParams<{ workspace: string; channel: string }>();
   const user = data.Sender;
+
+  const result = regexifyString({
+    input: data.content,
+    // g: global, 없으면: 하나만
+    // \d: 숫자, +, ?, * : 개수
+    pattern: /@\[(.+?)\]\((\d+?)\)|\n]/g,
+    decorator(match, index) {
+      const arr: string[] | null = match.match(/@\[(.+?)]\((\d+?)\)/)!;
+      if (arr) {
+        return (
+          <Link key={match + index} to={`/workspace/${workspace}/dm/${arr[2]}`}>
+            @{arr[1]}
+          </Link>
+        );
+      }
+      return <br key={index} />;
+    },
+  });
 
   return (
     <ChatWrapper>
@@ -20,7 +41,7 @@ const Chat: VFC<Props> = ({ data }) => {
           <b>{user.nickname}</b>
           <span>{dayjs(data.createdAt).format('h:mm A')}</span>
         </div>
-        <p>{data.content}</p>
+        <p>{result}</p>
       </div>
     </ChatWrapper>
   );
