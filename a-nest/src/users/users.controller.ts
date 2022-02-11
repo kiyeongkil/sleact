@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { UserDto } from 'src/common/dto/user.dto';
 import { User } from 'src/common/decorators/user.decorator';
-import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
+import { UndefinedToNullInterceptor } from "../common/interceptors/undefinedToNull.interceptor";
 
 @UseInterceptors(UndefinedToNullInterceptor)
 @ApiTags('USERS')
@@ -13,7 +13,13 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @ApiResponse({
+    status: 200,
+    description: '성공',
     type: UserDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
   })
   @ApiOperation({ summary: '내 정보' })
   @Get()
@@ -23,13 +29,18 @@ export class UsersController {
 
   @ApiOperation({ summary: '회원가입' })
   @Post()
-  postUsers(@Body() data: JoinRequestDto) {
-    this.usersService.postUsers(data.email, data.nickname, data.password);
+  async postUsers(@Body() data: JoinRequestDto) {
+    await this.usersService.postUsers(data.email, data.nickname, data.password);
   }
 
   @ApiResponse({
+    status: 200,
     description: '성공',
     type: UserDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
   })
   @ApiOperation({ summary: '로그인' })
   @Post('login')
