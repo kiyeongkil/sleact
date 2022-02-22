@@ -1,15 +1,8 @@
 import path from 'path';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-import webpack, { Configuration as WebpackConfiguration } from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
+import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-
-declare module 'webpack' {
-  interface Configuration {
-    devServer?: WebpackDevServer.Configuration;
-  }
-}
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -79,13 +72,13 @@ const config: webpack.Configuration = {
   devServer: {
     historyApiFallback: true, // react router
     port: 3090,
-    // publicPath: '/dist/',
-    // proxy: {
-    //   '/api/': {
-    //     target: 'http://localhost:3095',
-    //     changeOrigin: true,
-    //   },
-    // },
+    publicPath: '/dist/',
+    proxy: {
+      '/api/': {
+        target: 'http://localhost:3095',
+        changeOrigin: true,
+      },
+    },
   },
 };
 
