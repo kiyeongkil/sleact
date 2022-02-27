@@ -31,7 +31,7 @@ try {
 
 @ApiTags('CHANNELS')
 @UseGuards(LoggedInGuard)
-@Controller('api/workspaces/:url/channels')
+@Controller('api/workspaces/')
 export class ChannelsController {
   constructor(private channelsService: ChannelsService) {}
 

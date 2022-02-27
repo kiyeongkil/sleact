@@ -1,12 +1,8 @@
 import React from 'react';
-import Workspace from '@layouts/Workspace';
+import { Container } from '@pages/Channel/styles';
 
 const Channel = () => {
-  return (
-    <Workspace>
-      <div>로그인 완료</div>
-    </Workspace>
-  );
+  return <Container>채널</Container>;
 };
 
 export default Channel;
