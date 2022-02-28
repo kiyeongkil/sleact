@@ -7,7 +7,7 @@ import axios from 'axios';
 import React, { useCallback, VFC } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'react-toastify';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
 interface Props {
   show: boolean;
@@ -20,17 +20,14 @@ const CreateChannelModal: VFC<Props> = ({ show, onCloseModal, setShowCreateChann
   const { data: userData } = useSWR<IUser | false>('/api/users', fetcher, {
     dedupingInterval: 2000, // 2초
   });
-  const { data: channelData, mutate } = useSWR<IChannel[]>(
-    userData ? `/api/workspaces/${workspace}/channels` : null,
-    fetcher,
-  );
+  const { data, mutate } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
   const onCreateChannel = useCallback(
     (e) => {
       e.preventDefault();
       axios
         .post(
-          `http://localhost:3095/api/workspaces/${workspace}/channels`,
+          `/api/workspaces/${workspace}/channels`,
           {
             name: newChannel,
           },

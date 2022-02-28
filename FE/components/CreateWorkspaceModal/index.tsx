@@ -30,7 +30,7 @@ const CreateWorkspaceModal: VFC<Props> = ({ show, onCloseModal, setShowCreateWor
       if (!newUrl || !newUrl.trim()) return;
       axios
         .post(
-          `http://localhost:3095/api/workspaces`,
+          `/api/workspaces`,
           {
             workspace: newWorkspace,
             url: newUrl,

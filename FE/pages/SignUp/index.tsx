@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 
 const SignUp = () => {
-  const {data, error} = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data, error } = useSWR(`/api/users`, fetcher);
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -16,13 +16,13 @@ const SignUp = () => {
   const [mismatchError, setMismatchError] = useState(false);
   const [signUpError, setSignUpError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
-  
+
   const onChangePassword = useCallback(
     (e) => {
       setPassword(e.target.value);
       setMismatchError(e.target.value !== passwordCheck);
     },
-    [passwordCheck]
+    [passwordCheck],
   );
 
   const onChangePasswordCheck = useCallback(
@@ -32,30 +32,31 @@ const SignUp = () => {
     },
     [password],
   );
-  
+
   const onSubmit = useCallback(
     (e) => {
-		  e.preventDefault();
+      e.preventDefault();
       if (!mismatchError && nickname) {
         setSignUpError('');
         setSignUpSuccess(false);
-        axios.post('/api/users', {
-          email,
-          nickname,
-          password,
-        })
-        .then((response) => {
-          console.log(response);
-          setSignUpSuccess(true);
-        })
-        .catch((error) => {
-          console.log(error.response);
-          setSignUpError(error.response.data);
-        })
-        .finally(() => {});
+        axios
+          .post('/api/users', {
+            email,
+            nickname,
+            password,
+          })
+          .then((response) => {
+            console.log(response);
+            setSignUpSuccess(true);
+          })
+          .catch((error) => {
+            console.log(error.response);
+            setSignUpError(error.response.data);
+          })
+          .finally(() => {});
       }
-    }, 
-    [email, nickname, password, passwordCheck]
+    },
+    [email, nickname, password, passwordCheck],
   );
 
   if (data === undefined) {
@@ -63,7 +64,7 @@ const SignUp = () => {
   }
 
   if (data) {
-    return <Route element={<Navigate replace to ="/workspace/channel" />} />
+    return <Route element={<Navigate replace to="/workspace/channel" />} />;
   }
 
   return (
